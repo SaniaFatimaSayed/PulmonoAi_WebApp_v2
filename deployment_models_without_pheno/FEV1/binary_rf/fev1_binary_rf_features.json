@@ -1,0 +1,23 @@
+[
+    "height",
+    "spectral_bandwidth_breath",
+    "age",
+    "weight",
+    "mfcc_speech_7",
+    "mfcc_speech_9",
+    "mfcc_speech_12",
+    "mfcc_speech_3",
+    "mfcc_speech_8",
+    "mfcc_speech_4",
+    "mfcc_speech_5",
+    "mfcc_speech_1",
+    "mfcc_speech_6",
+    "mfcc_speech_11",
+    "mfcc_breath_9",
+    "mfcc_breath_13",
+    "mfcc_breath_12",
+    "mfcc_speech_10",
+    "mean_breath_duration",
+    "mfcc_speech_13",
+    "has_speech"
+]

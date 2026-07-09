@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" href="format.css">
+    <title>Voice Recording</title>
+</head>
+<body>
+    <div class="card1">
+        <h3>Record your voice while reading this text</h3>
+        <form class="container">
+            Instructions: please read the following text at the same volume as if you were talking on the
+            telephone. If you reach the end of the text then please start again from the beginning.
+            The recording would stop at 30-seconds.
+            <br><br>
+                <div id="recorder">
+                    <audio id="audioPlayback" controls></audio><p id="timer">00:00</p>
+                    <button id="recordAgainBtn" type="button" style="display:none;">Record Again</button><br>
+                    <button id="submit" type="button" style="display:none;">Submit and know your Lung Function</button>
+                    <button id="startBtn" type="button">Start Recording</button>
+                </div>
+                <br>
+                When we got to the strange house it began to snow in quite a different way. A mass of tired old
+                clouds opened and flung snow at us, all of a sudden and just anyhow. They weren’t ordinary
+                snowflakes – they fell straight down in large sticky lumps, they clung to each other and sank
+                quickly and they weren’t white, but grey. The whole world was as heavy as lead. Mummy
+                carried in the suitcases and stamped her feet on the doormat and talked the whole time because
+                she thought the whole thing was such fun and that everything was different. But I said nothing
+                because I didn’t like this strange house. I stood in the window and watched the snow falling,
+                and it was all wrong. It wasn’t the same as in town. There it blows black and white over the
+                roof or falls gently as if from heaven, and forms beautiful arch over the sitting-room window.
+                The landscape looked dangerous too. It was bare and open and swallowed up the snow, and the
+                trees stood in black rows that ended in nothing. At the edge of the world there was a narrow
+                fringe of forest. Everything was wrong. It should be winter in town and summer in the country.
+                Everything was topsy-turvy. The house was big and empty, and there were too many rooms.
+                Everything was very clean and you could never hear your own steps as you walked because
+                the carpets were so big and they were as soft as fur.<br>
+                (Source: Tove Jansson (2006). A winter book. London: Sort Of Books.)
+        </form>
+    </div>
+    <script lang="javascript">
+              let mediaRecorder;
+              let audioChunks = [];
+              let timerInterval;
+              let seconds = 0;
+
+              const startBtn = document.getElementById("startBtn");
+              const recordAgainBtn = document.getElementById("recordAgainBtn");
+              const audioPlayback = document.getElementById("audioPlayback");
+              const timerDisplay = document.getElementById("timer");
+
+              function updateTimer() {
+                seconds++;
+                let m = String(Math.floor(seconds / 60)).padStart(2, "0");
+                let s = String(seconds % 60).padStart(2, "0");
+                timerDisplay.textContent = `${m}:${s}`;
+              }
+
+              async function startRecording() {
+                try {
+                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                  mediaRecorder = new MediaRecorder(stream);
+                  audioChunks = [];
+                  seconds = 0;
+                  timerDisplay.textContent = "00:00";
+
+                  mediaRecorder.start();
+                  timerInterval = setInterval(updateTimer, 1000);
+
+                  mediaRecorder.addEventListener("dataavailable", event => {
+                    audioChunks.push(event.data);
+                  });
+
+                  mediaRecorder.addEventListener("stop", () => {
+                    clearInterval(timerInterval);
+                    const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+
+                    // Show "Record Again" after 30s
+                    recordAgainBtn.style.display = "inline-block";
+                  });
+
+                  // Automatically stop after 30 seconds
+                  setTimeout(() => {
+                    if (mediaRecorder.state === "recording") {
+                      mediaRecorder.stop();
+                    }
+                  }, 30000);
+
+                  startBtn.disabled = true;
+                  recordAgainBtn.style.display = "none";
+
+                } catch (err) {
+                  alert("Microphone access denied or not supported.");
+                  console.error(err);
+                }
+              }
+
+              startBtn.addEventListener("click", startRecording);
+
+              recordAgainBtn.addEventListener("click", () => {
+                startBtn.disabled = false;
+                audioPlayback.src = "";
+                startRecording();
+              });
+</script>
+</body>
+</html>

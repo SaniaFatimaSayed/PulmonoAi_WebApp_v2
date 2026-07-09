@@ -1,0 +1,56 @@
+{
+    "target": "FEV1/FVC",
+    "task": "binary",
+    "threshold": 70.0,
+    "model": "XGBoost",
+    "feature_mode": "top",
+    "top_n": 20,
+    "num_features": 21,
+    "features": [
+        "weight",
+        "mfcc_speech_7",
+        "age",
+        "mfcc_speech_6",
+        "spectral_bandwidth_breath",
+        "height",
+        "mfcc_speech_9",
+        "mfcc_speech_5",
+        "mfcc_speech_8",
+        "mfcc_speech_1",
+        "mean_breath_duration",
+        "mfcc_speech_12",
+        "SpectralContrast_speech",
+        "mfcc_speech_3",
+        "mfcc_speech_11",
+        "mfcc_breath_9",
+        "roll_off_breath_95",
+        "Mean_Amp_speech",
+        "mfcc_speech_13",
+        "mfcc_breath_13",
+        "has_speech"
+    ],
+    "label_mapping": {
+        "0": "Abnormal",
+        "1": "Normal"
+    },
+    "best_params": {
+        "model__subsample": 0.8,
+        "model__n_estimators": 500,
+        "model__max_depth": 6,
+        "model__learning_rate": 0.03,
+        "model__colsample_bytree": 0.8
+    },
+    "best_cv_score": 0.9261813976755621,
+    "test_metrics": {
+        "accuracy": 0.8641509433962264,
+        "macro_f1": 0.8638232271325796,
+        "auc": 0.9364245014245014,
+        "sensitivity": 0.8962962962962929,
+        "specificity": 0.8307692307692275
+    },
+    "train_test_mode": "group",
+    "cv": "GroupKFold",
+    "cv_splits": 5,
+    "test_size": 0.2,
+    "seed": 42
+}

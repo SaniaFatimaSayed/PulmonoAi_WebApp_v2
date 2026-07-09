@@ -1,0 +1,27 @@
+{
+    "target": "FEV1/FVC",
+    "model_type": "MERF",
+    "base_model": "RandomForestRegressor",
+    "feature_mode": "top",
+    "top_n": 30,
+    "random_seed": 42,
+    "cv_folds": 10,
+    "cv_metrics": {
+        "r2_mean": 0.3965511971572175,
+        "r2_std": 0.044970477355873444,
+        "mae_mean": 6.480204084406806,
+        "mae_std": 0.13197287156069457,
+        "rmse_mean": 8.692372026451526,
+        "rmse_std": 0.27357422430715217,
+        "mape_mean": 9.970826295681105,
+        "mape_std": 0.2617548518493898
+    },
+    "test_metrics": {
+        "r2": 0.38754749871641736,
+        "mae": 6.660426177624331,
+        "mse": 76.30001931757518,
+        "rmse": 8.734988226527566,
+        "mape": 10.410050007067188
+    },
+    "notes": "Deployment artefacts for FEV1 regression MERF model."
+}

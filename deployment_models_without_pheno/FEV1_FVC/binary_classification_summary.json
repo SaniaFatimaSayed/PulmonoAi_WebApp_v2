@@ -1,0 +1,48 @@
+[
+    {
+        "target": "FEV1/FVC",
+        "task": "binary",
+        "threshold": 70.0,
+        "model": "XGBoost",
+        "feature_mode": "top",
+        "top_n": 10,
+        "num_features": 11,
+        "features": [
+            "mfcc_speech_7",
+            "mfcc_speech_6",
+            "spectral_bandwidth_breath",
+            "mfcc_speech_9",
+            "mfcc_speech_5",
+            "mfcc_speech_8",
+            "mfcc_speech_1",
+            "mean_breath_duration",
+            "mfcc_speech_12",
+            "SpectralContrast_speech",
+            "has_speech"
+        ],
+        "label_mapping": {
+            "0": "Abnormal",
+            "1": "Normal"
+        },
+        "best_params": {
+            "model__subsample": 0.8,
+            "model__n_estimators": 500,
+            "model__max_depth": 6,
+            "model__learning_rate": 0.03,
+            "model__colsample_bytree": 0.8
+        },
+        "best_cv_score": 0.8639481436972531,
+        "test_metrics": {
+            "accuracy": 0.7981132075471699,
+            "macro_f1": 0.797124469200196,
+            "auc": 0.881908831908832,
+            "sensitivity": 0.8518518518518486,
+            "specificity": 0.7423076923076893
+        },
+        "train_test_mode": "group",
+        "cv": "GroupKFold",
+        "cv_splits": 5,
+        "test_size": 0.2,
+        "seed": 42
+    }
+]

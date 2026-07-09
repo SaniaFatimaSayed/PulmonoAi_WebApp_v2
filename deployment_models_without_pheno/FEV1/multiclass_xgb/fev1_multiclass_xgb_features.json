@@ -1,0 +1,23 @@
+[
+    "spectral_bandwidth_breath",
+    "mfcc_speech_7",
+    "mfcc_speech_9",
+    "mfcc_speech_12",
+    "mfcc_speech_3",
+    "mfcc_speech_8",
+    "mfcc_speech_4",
+    "mfcc_speech_5",
+    "mfcc_speech_1",
+    "mfcc_speech_6",
+    "mfcc_speech_11",
+    "mfcc_breath_9",
+    "mfcc_breath_13",
+    "mfcc_breath_12",
+    "mfcc_speech_10",
+    "mean_breath_duration",
+    "mfcc_speech_13",
+    "mfcc_breath_3",
+    "SpectralContrast_speech",
+    "roll_off_breath_95",
+    "has_speech"
+]

@@ -1,0 +1,53 @@
+{
+    "target": "FEV1",
+    "task": "multiclass",
+    "model": "XGBoost",
+    "top_n": 30,
+    "num_features": 21,
+    "features": [
+        "height",
+        "spectral_bandwidth_breath",
+        "age",
+        "weight",
+        "mfcc_speech_7",
+        "mfcc_speech_9",
+        "mfcc_speech_12",
+        "mfcc_speech_3",
+        "mfcc_speech_8",
+        "mfcc_speech_4",
+        "mfcc_speech_5",
+        "mfcc_speech_1",
+        "mfcc_speech_6",
+        "mfcc_speech_11",
+        "mfcc_breath_9",
+        "mfcc_breath_13",
+        "mfcc_breath_12",
+        "mfcc_speech_10",
+        "mean_breath_duration",
+        "mfcc_speech_13",
+        "has_speech"
+    ],
+    "label_mapping": {
+        "0": "Reduced FEV1",
+        "1": "Mildly reduced FEV1",
+        "2": "Normal FEV1"
+    },
+    "label_encoder_classes": [
+        0,
+        1,
+        2
+    ],
+    "best_params": {
+        "model__subsample": 0.8,
+        "model__n_estimators": 300,
+        "model__max_depth": 5,
+        "model__learning_rate": 0.1,
+        "model__colsample_bytree": 0.8
+    },
+    "test_accuracy": 0.8397515527950311,
+    "test_macro_f1": 0.7688054407998391,
+    "split": "GroupShuffleSplit",
+    "cv": "GroupKFold",
+    "test_size": 0.3,
+    "seed": 42
+}
