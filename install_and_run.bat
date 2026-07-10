@@ -51,7 +51,7 @@ python -m pip install --upgrade pip
 :: Install dependencies
 echo.
 echo Installing dependencies, this may take a few minutes...
-pip install -r requirements1.txt
+pip install -r requirements.txt
 
 if %errorlevel% neq 0 (
     echo.
