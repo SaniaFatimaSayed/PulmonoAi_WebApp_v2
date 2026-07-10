@@ -49,9 +49,27 @@ call .venv\Scripts\activate
 python -m pip install --upgrade pip
 
 :: Install dependencies
-pip install -r requirements.txt
+echo.
+echo Installing dependencies, this may take a few minutes...
+pip install -r requirements1.txt
+
+if %errorlevel% neq 0 (
+    echo.
+    echo ==========================================
+    echo   ERROR: Failed to install dependencies.
+    echo   Check the messages above for details.
+    echo ==========================================
+    echo.
+    pause
+    exit /b
+)
+
+echo.
+echo Dependencies installed successfully.
+echo.
 
 :: Launch Streamlit
+echo Launching Pulmono.AI...
 streamlit run app_v4.py
 
 pause
