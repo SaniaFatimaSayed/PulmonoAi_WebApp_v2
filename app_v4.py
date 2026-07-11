@@ -272,6 +272,7 @@ elif st.session_state.page == "record":
 
         st.success("Recording saved successfully.")
 
+
     if st.session_state.audio_bytes is not None:
         st.audio(
             st.session_state.audio_bytes,
@@ -471,8 +472,6 @@ elif st.session_state.page == "phenotype":
 
                             noise_mode=noise_mode,
 
-                            patient_info=patient_info,
-
                             crop_start=15,
 
                             crop_end=25
@@ -496,8 +495,6 @@ elif st.session_state.page == "phenotype":
                             uploaded_file=st.session_state.uploaded_file,
 
                             noise_mode=noise_mode,
-
-                            patient_info=patient_info
 
                         )
 
