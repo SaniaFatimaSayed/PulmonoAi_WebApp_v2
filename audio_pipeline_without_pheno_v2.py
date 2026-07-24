@@ -2,6 +2,7 @@ import os
 import subprocess
 import librosa
 import soundfile as sf
+import imageio_ffmpeg
 
 from denoiser_module import denoise_audio
 from bigru_segmenter import run_bigru_segmentation
@@ -11,29 +12,32 @@ from inference import predict_all_models
 
 def ensure_wav(input_path, output_dir="outputs/converted_audio"):
     """
-    Convert any incoming audio (webm/opus, mp4/aac, etc.) to a clean
-    44.1kHz mono WAV using ffmpeg, so librosa never has to rely on
-    audioread's backend detection.
+    Convert any incoming audio to a clean 44.1 kHz mono WAV.
     """
+
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+
     os.makedirs(output_dir, exist_ok=True)
+
     base = os.path.splitext(os.path.basename(input_path))[0]
     output_path = os.path.join(output_dir, f"{base}_converted.wav")
 
     result = subprocess.run(
         [
-            "ffmpeg", "-y",
+            ffmpeg_exe,
+            "-y",
             "-i", input_path,
             "-ar", "44100",
             "-ac", "1",
-            output_path
+            output_path,
         ],
         capture_output=True,
-        text=True
+        text=True,
     )
 
     if result.returncode != 0:
         raise RuntimeError(
-            f"ffmpeg failed to convert {input_path}:\n{result.stderr}"
+            f"FFmpeg failed to convert {input_path}:\n{result.stderr}"
         )
 
     return output_path
