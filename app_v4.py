@@ -3,7 +3,8 @@ import uuid
 import base64
 
 import streamlit as st
-from streamlit_mic_recorder import mic_recorder
+
+from mic_recorder_custom import mic_recorder_custom
 
 from audio_pipeline import run_audio_pipeline
 from audio_pipeline_v2 import run_audio_pipeline_from_path
@@ -21,6 +22,8 @@ AUDIO_DIR = "outputs/recorded_audio"
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
 LOGO = "Pulmono.AI.png"
+
+RECORD_SECONDS = 30
 
 # SESSION STATE
 DEFAULT_STATE = {
@@ -219,7 +222,6 @@ if st.session_state.page == "home":
             st.rerun()
 
 
-
 # ------------- RECORD PAGE ------------------
 elif st.session_state.page == "record":
 
@@ -252,26 +254,33 @@ elif st.session_state.page == "record":
         unsafe_allow_html=True
     )
 
-    st.warning(
-        "Click Start Recording, read continuously, then press Stop."
-    )
+    # st.info("""
+    # 🎙 Instructions
+    #
+    # 1. Click **🔴 Start Recording** below. This immediately starts both your
+    #    microphone and the 30-second timer.
+    # 2. Read the Rainbow Passage naturally.
+    # 3. Continue reading for approximately **30 seconds**.
+    # 4. Press **⏹ Stop Recording**.
+    # 5. Continue to the next page.
+    # """)
 
-    audio = mic_recorder(
-        start_prompt="🎙 Start Recording",
-        stop_prompt="⏹ Stop Recording",
-        just_once=False,
-        use_container_width=True,
-        key="mic_recording"
-    )
+    # Single custom component: one click both requests the microphone and
+    # starts the on-screen timer, since they happen in the same JS click
+    # handler in the same browser frame. Returns None until a recording has
+    # been stopped, then {"audio_base64": ..., "sample_rate": ..., "format": "wav"}.
+    result = mic_recorder_custom(record_seconds=RECORD_SECONDS, key="custom_recorder")
 
-    if audio is not None and audio["bytes"] != st.session_state.audio_bytes:
-        path = save_audio(audio["bytes"])
+    if result is not None and result.get("audio_base64"):
+        new_bytes = base64.b64decode(result["audio_base64"])
 
-        st.session_state.audio_path = path
-        st.session_state.audio_bytes = audio["bytes"]
+        if new_bytes != st.session_state.audio_bytes:
+            path = save_audio(new_bytes)
 
-        st.success("Recording saved successfully.")
+            st.session_state.audio_path = path
+            st.session_state.audio_bytes = new_bytes
 
+            st.success("Recording saved successfully.")
 
     if st.session_state.audio_bytes is not None:
         st.audio(
@@ -296,7 +305,6 @@ elif st.session_state.page == "record":
                 st.session_state.page = "phenotype"
 
                 st.rerun()
-
 
 
 # ---------------- UPLOAD PAGE ----------------
@@ -538,16 +546,6 @@ elif st.session_state.page == "results":
                 st.write("**Status:** Borderline Normal")
             else:
                 st.write("**Status:** Abnormal")
-            # st.write("**Status:**", results["fev1_binary_label"])
-            #
-            # st.write(
-            #     "**Severity:**",
-            #     results["fev1_multiclass_label"]
-            # )
-            #
-            # st.caption(
-            #     f"Confidence: {results['fev1_binary_confidence']:.1f}%"
-            # )
 
         with col2:
 
@@ -564,20 +562,6 @@ elif st.session_state.page == "results":
                 st.write("**Status:** Borderline Normal")
             else:
                 st.write("**Status:** Abnormal")
-
-            # st.write(
-            #     "**Status:**",
-            #     results["fev1_fvc_binary_label"]
-            # )
-            #
-            # st.write(
-            #     "**Severity:**",
-            #     results["fev1_fvc_multiclass_label"]
-            # )
-            #
-            # st.caption(
-            #     f"Confidence: {results['fev1_fvc_binary_confidence']:.1f}%"
-            # )
 
         st.warning(
             "Research prototype only. "
