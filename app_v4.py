@@ -269,43 +269,97 @@ elif st.session_state.page == "record":
     # starts the on-screen timer, since they happen in the same JS click
     # handler in the same browser frame. Returns None until a recording has
     # been stopped, then {"audio_base64": ..., "sample_rate": ..., "format": "wav"}.
-    result = mic_recorder_custom(record_seconds=RECORD_SECONDS, key="custom_recorder")
+    # result = mic_recorder_custom(record_seconds=RECORD_SECONDS, key="custom_recorder")
+    #
+    # if result is not None and result.get("audio_base64"):
+    #     new_bytes = base64.b64decode(result["audio_base64"])
+    #
+    #     if new_bytes != st.session_state.audio_bytes:
+    #         path = save_audio(new_bytes)
+    #
+    #         st.session_state.audio_path = path
+    #         st.session_state.audio_bytes = new_bytes
+    #
+    #         st.success("Recording saved successfully.")
+    #
+    # if st.session_state.audio_bytes is not None:
+    #     st.audio(
+    #         st.session_state.audio_bytes,
+    #         format="audio/wav"
+    #     )
+    #
+    # col1, col2 = st.columns(2)
+    #
+    # with col1:
+    #
+    #     if st.button("⬅ Back"):
+    #         reset()
+    #
+    #         st.rerun()
+    #
+    # with col2:
+    #
+    #     if st.session_state.audio_path is not None:
+    #
+    #         if st.button("Next ➜"):
+    #             st.session_state.page = "phenotype"
+    #
+    #             st.rerun()
 
-    if result is not None and result.get("audio_base64"):
-        new_bytes = base64.b64decode(result["audio_base64"])
+    result = mic_recorder_custom(
+        record_seconds=RECORD_SECONDS,
+        key="custom_recorder"
+    )
 
-        if new_bytes != st.session_state.audio_bytes:
-            path = save_audio(new_bytes)
+    # DEBUG: Check what the recorder returns
+    if result is not None:
 
-            st.session_state.audio_path = path
-            st.session_state.audio_bytes = new_bytes
+        st.write("Recorder response type:", type(result))
 
-            st.success("Recording saved successfully.")
+        if isinstance(result, dict):
 
+            st.write("Recorder response keys:", list(result.keys()))
+
+            if result.get("audio_base64"):
+
+                new_bytes = base64.b64decode(
+                    result["audio_base64"]
+                )
+
+                if new_bytes != st.session_state.audio_bytes:
+                    path = save_audio(new_bytes)
+
+                    st.session_state.audio_path = path
+                    st.session_state.audio_bytes = new_bytes
+
+                    st.success("Recording saved successfully!")
+
+            else:
+                st.warning("Recorder returned data, but no audio_base64 was found.")
+
+    # Display recording
     if st.session_state.audio_bytes is not None:
         st.audio(
             st.session_state.audio_bytes,
             format="audio/wav"
         )
 
+        st.success("Recording ready for analysis.")
+
+    # Navigation
     col1, col2 = st.columns(2)
 
     with col1:
-
         if st.button("⬅ Back"):
             reset()
-
             st.rerun()
 
     with col2:
-
-        if st.session_state.audio_path is not None:
+        if st.session_state.audio_bytes is not None:
 
             if st.button("Next ➜"):
                 st.session_state.page = "phenotype"
-
                 st.rerun()
-
 
 # ---------------- UPLOAD PAGE ----------------
 elif st.session_state.page == "upload":
@@ -547,6 +601,10 @@ elif st.session_state.page == "results":
             else:
                 st.write("**Status:** Abnormal")
 
+            st.caption(
+                f"Confidence: {results['fev1_binary_confidence']:.1f}%"
+            )
+
         with col2:
 
             fev1_fvc = results["fev1_fvc"]
@@ -562,6 +620,11 @@ elif st.session_state.page == "results":
                 st.write("**Status:** Borderline Normal")
             else:
                 st.write("**Status:** Abnormal")
+
+            st.caption(
+                f"Confidence: {results['fev1_fvc_binary_confidence']:.1f}%"
+            )
+
 
         st.warning(
             "Research prototype only. "
