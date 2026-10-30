@@ -10,7 +10,6 @@ torch==2.7.1
 torchaudio==2.7.1
 librosa==0.11.0
 soundfile==0.13.1
-denoiser==0.1.5
 shap==0.45.0
 lime==0.2.0.1
 imageio-ffmpeg==0.5.1
